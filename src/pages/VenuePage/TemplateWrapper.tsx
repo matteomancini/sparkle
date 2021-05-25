@@ -28,6 +28,8 @@ import { WithNavigationBar } from "components/organisms/WithNavigationBar";
 
 import { AnnouncementMessage } from "components/molecules/AnnouncementMessage";
 
+import { AnnouncementContainer } from "./AnnouncementContainer";
+
 export interface TemplateWrapperProps {
   venue: WithId<AnyVenue>;
 }
@@ -146,7 +148,9 @@ const TemplateWrapper: React.FC<TemplateWrapperProps> = ({ venue }) => {
           fullscreen={fullscreen}
           hasBackButton={hasBackButton}
         >
-          <AnnouncementMessage message={venue.bannerMessage} />
+          <AnnouncementContainer>
+            <AnnouncementMessage banner={venue.banner} isCancel />
+          </AnnouncementContainer>
           {template}
           <ChatSidebar />
           <UserProfileModal venue={venue} />

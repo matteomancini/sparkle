@@ -761,6 +761,7 @@ exports.adminHideVenue = functions.https.onCall(async (data, context) => {
   admin.firestore().collection("venues").doc(venueId).update(updated);
 });
 
+//This will be change
 exports.adminUpdateBannerMessage = functions.https.onCall(
   async (data, context) => {
     await checkUserIsOwner(data.venueId, context.auth.token.user_id);
@@ -768,7 +769,7 @@ exports.adminUpdateBannerMessage = functions.https.onCall(
       .firestore()
       .collection("venues")
       .doc(data.venueId)
-      .update({ bannerMessage: data.bannerMessage || null });
+      .update({ banner: data.banner || null });
   }
 );
 

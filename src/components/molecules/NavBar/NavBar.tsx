@@ -12,11 +12,7 @@ import { IS_BURN } from "secrets";
 
 import { UpcomingEvent } from "types/UpcomingEvent";
 
-import {
-  currentVenueSelectorData,
-  parentVenueSelector,
-  radioStationsSelector,
-} from "utils/selectors";
+import { parentVenueSelector, radioStationsSelector } from "utils/selectors";
 import { hasElements } from "utils/types";
 import { venueInsideUrl } from "utils/url";
 
@@ -25,6 +21,7 @@ import { useSelector } from "hooks/useSelector";
 import { useUser } from "hooks/useUser";
 import { useVenueId } from "hooks/useVenueId";
 import { useFirestoreConnect } from "hooks/useFirestoreConnect";
+import { useConnectCurrentVenueNG } from "hooks/useConnectCurrentVenueNG";
 
 import { GiftTicketModal } from "components/organisms/GiftTicketModal/GiftTicketModal";
 import { ProfilePopoverContent } from "components/organisms/ProfileModal";
@@ -81,7 +78,7 @@ const NavBar: React.FC<NavBarPropsType> = ({
 }) => {
   const { user, profile } = useUser();
   const venueId = useVenueId();
-  const venue = useSelector(currentVenueSelectorData);
+  const { currentVenue: venue } = useConnectCurrentVenueNG(venueId);
   const venueParentId = venue?.parentId;
   const radioStations = useSelector(radioStationsSelector);
   const parentVenue = useSelector(parentVenueSelector);
