@@ -7,6 +7,7 @@ import { WithId } from "utils/id";
 
 import { ReactionsProvider } from "hooks/reactions";
 import { RelatedVenuesProvider } from "hooks/useRelatedVenues";
+// import { useShowHide } from "hooks/useShowHide";
 
 import { FriendShipPage } from "pages/FriendShipPage";
 
@@ -37,6 +38,8 @@ export interface TemplateWrapperProps {
 const TemplateWrapper: React.FC<TemplateWrapperProps> = ({ venue }) => {
   const history = useHistory();
   const match = useRouteMatch();
+
+  // const { isShown, show, hide } = useShowHide();
 
   let template;
   // @debt remove backButton from Navbar
@@ -148,7 +151,7 @@ const TemplateWrapper: React.FC<TemplateWrapperProps> = ({ venue }) => {
           fullscreen={fullscreen}
           hasBackButton={hasBackButton}
         >
-          <AnnouncementContainer>
+          <AnnouncementContainer isFullScreen={venue?.banner?.isFullScreen}>
             <AnnouncementMessage banner={venue.banner} isCancel />
           </AnnouncementContainer>
           {template}
