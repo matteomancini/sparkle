@@ -7,14 +7,15 @@ import { faTicketAlt } from "@fortawesome/free-solid-svg-icons";
 
 import firebase from "firebase/app";
 
-import { DEFAULT_PROFILE_IMAGE, PLAYA_VENUE_ID } from "settings";
+import { PLAYA_VENUE_ID } from "settings";
 import { IS_BURN } from "secrets";
 
 import { UpcomingEvent } from "types/UpcomingEvent";
 
+
 import { parentVenueSelector, radioStationsSelector } from "utils/selectors";
 import { hasElements } from "utils/types";
-import { venueInsideUrl } from "utils/url";
+import { enterVenue, venueInsideUrl } from "utils/url";
 
 import { useRadio } from "hooks/useRadio";
 import { useSelector } from "hooks/useSelector";
@@ -33,6 +34,7 @@ import UpcomingTickets from "components/molecules/UpcomingTickets";
 import { VenuePartygoers } from "components/molecules/VenuePartygoers";
 
 import { NavBarLogin } from "./NavBarLogin";
+import { UserAvatar } from "components/atoms/UserAvatar";
 
 import "./NavBar.scss";
 import * as S from "./Navbar.styles";
@@ -76,7 +78,7 @@ const NavBar: React.FC<NavBarPropsType> = ({
   redirectionUrl,
   hasBackButton = true,
 }) => {
-  const { user, profile } = useUser();
+  const { user, userWithId } = useUser();
   const venueId = useVenueId();
   const { currentVenue: venue } = useConnectCurrentVenueNG(venueId);
   const venueParentId = venue?.parentId;
@@ -96,6 +98,7 @@ const NavBar: React.FC<NavBarPropsType> = ({
 
   const {
     location: { pathname },
+    push: openUrlUsingRouter,
   } = useHistory();
   const isOnPlaya = pathname.toLowerCase() === venueInsideUrl(PLAYA_VENUE_ID);
 
@@ -148,8 +151,8 @@ const NavBar: React.FC<NavBarPropsType> = ({
 
   const parentVenueId = venue?.parentId ?? "";
   const backToParentVenue = useCallback(() => {
-    window.location.href = venueInsideUrl(parentVenueId);
-  }, [parentVenueId]);
+    enterVenue(parentVenueId, { customOpenRelativeUrl: openUrlUsingRouter });
+  }, [parentVenueId, openUrlUsingRouter]);
 
   const navigateToHomepage = useCallback(() => {
     const venueLink =
@@ -171,8 +174,6 @@ const NavBar: React.FC<NavBarPropsType> = ({
 
   // TODO: ideally this would find the top most parent of parents and use those details
   const navbarTitle = parentVenue?.name ?? venue.name;
-
-  const profileImage = profile?.pictureUrl || DEFAULT_PROFILE_IMAGE;
 
   const radioStation = !!hasRadioStations && radioStations![0];
 
@@ -294,15 +295,7 @@ const NavBar: React.FC<NavBarPropsType> = ({
                   overlay={ProfilePopover}
                   rootClose={true}
                 >
-                  <div className="navbar-link-profile">
-                    <img
-                      src={profileImage}
-                      className="profile-icon"
-                      alt="avatar"
-                      width="40"
-                      height="40"
-                    />
-                  </div>
+                  <UserAvatar user={userWithId} showStatus large />
                 </OverlayTrigger>
               </div>
             )}
