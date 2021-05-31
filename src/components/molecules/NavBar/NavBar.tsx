@@ -12,7 +12,6 @@ import { IS_BURN } from "secrets";
 
 import { UpcomingEvent } from "types/UpcomingEvent";
 
-
 import { parentVenueSelector, radioStationsSelector } from "utils/selectors";
 import { hasElements } from "utils/types";
 import { enterVenue, venueInsideUrl } from "utils/url";
