@@ -29,7 +29,7 @@ import { ProfilePopoverContent } from "components/organisms/ProfileModal";
 import { RadioModal } from "components/organisms/RadioModal/RadioModal";
 import { NavBarSchedule } from "components/organisms/NavBarSchedule/NavBarSchedule";
 
-import NavSearchBar from "components/molecules/NavSearchBar";
+import { NavSearchBar } from "components/molecules/NavSearchBar";
 import UpcomingTickets from "components/molecules/UpcomingTickets";
 import { VenuePartygoers } from "components/molecules/VenuePartygoers";
 
@@ -69,12 +69,12 @@ const GiftPopover = (
 
 const navBarScheduleClassName = "NavBar__schedule-dropdown";
 
-interface NavBarPropsType {
+export interface NavBarPropsType {
   redirectionUrl?: string;
   hasBackButton?: boolean;
 }
 
-const NavBar: React.FC<NavBarPropsType> = ({
+export const NavBar: React.FC<NavBarPropsType> = ({
   redirectionUrl,
   hasBackButton = true,
 }) => {
@@ -144,7 +144,11 @@ const NavBar: React.FC<NavBarPropsType> = ({
     setEventScheduleVisible(!isEventScheduleVisible);
   }, [isEventScheduleVisible]);
   const hideEventSchedule = useCallback((e) => {
-    if (e.target.closest(`.${navBarScheduleClassName}`)) return;
+    if (
+      e.target.closest(`.${navBarScheduleClassName}`) ||
+      e.target.closest(`.modal`)
+    )
+      return;
 
     setEventScheduleVisible(false);
   }, []);
@@ -210,7 +214,7 @@ const NavBar: React.FC<NavBarPropsType> = ({
 
             {user && (
               <div className="navbar-links">
-                <NavSearchBar />
+                <NavSearchBar venueId={venueId} />
 
                 {hasUpcomingEvents && (
                   <OverlayTrigger
@@ -310,7 +314,10 @@ const NavBar: React.FC<NavBarPropsType> = ({
         onClick={hideEventSchedule}
       >
         <div className={navBarScheduleClassName}>
-          <NavBarSchedule isVisible={isEventScheduleVisible} />
+          <NavBarSchedule
+            isVisible={isEventScheduleVisible}
+            venueId={venueId}
+          />
         </div>
       </div>
 
@@ -326,5 +333,3 @@ const NavBar: React.FC<NavBarPropsType> = ({
     </>
   );
 };
-
-export default NavBar;
